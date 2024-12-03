@@ -8,29 +8,38 @@ namespace FarmsGame.Tests
     public class PlayerTests
     {
         [Test]
-        public void Player_Move_UpdatesPosition()
+        public void Move_ChangesPlayerPosition()
         {
             var player = new Player(new Point(100, 100));
             var initialPosition = player.Bounds.Location;
 
-            player.Move(1, 0);
-
+            player.Move(1, 0); // Move right
             Assert.AreEqual(new Point(initialPosition.X + 10, initialPosition.Y), player.Bounds.Location);
         }
 
         [Test]
-        public void Player_PickUpItem_Success()
+        public void PickUpItem_AssignsHeldItem()
         {
             var player = new Player(new Point(100, 100));
             var item = new Item(new Point(100, 100), new Size(20, 20), ItemType.Useful);
 
             player.PickUpItem(item);
-
             Assert.AreEqual(item, player.HeldItem);
         }
 
         [Test]
-        public void Player_CannotPickUpMultipleItems()
+        public static void DropItem_ResetsHeldItem()
+        {
+            var player = new Player(new Point(100, 100));
+            var item = new Item(new Point(100, 100), new Size(20, 20), ItemType.Useful);
+
+            player.PickUpItem(item);
+            player.DropItem();
+            CustomAssert.IsNull(player.HeldItem, "HeldItem should be null after dropping.");
+        }
+
+        [Test]
+        public void CannotPickUpMoreThanOneItem()
         {
             var player = new Player(new Point(100, 100));
             var item1 = new Item(new Point(100, 100), new Size(20, 20), ItemType.Useful);
@@ -38,7 +47,6 @@ namespace FarmsGame.Tests
 
             player.PickUpItem(item1);
             player.PickUpItem(item2);
-
             Assert.AreEqual(item1, player.HeldItem);
         }
     }
