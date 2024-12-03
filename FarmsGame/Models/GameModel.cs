@@ -31,15 +31,20 @@ public class GameModel
 
     public GameModel(int gameDurationInSeconds)
     {
-        Player = new Player(new Point(110, 110));
-        Objects = new List<GameObject>
+        Player = new Player(new Point(110, 110), new Size(110, 110))
         {
-            new StorageZone(new Point(700, 500)),
-            new TrashZone(new Point(100, 500))
+            TextureUp = Image.FromFile("Resources/player_up.png"),
+            TextureDown = Image.FromFile("Resources/player_down.png"),
+            TextureLeft = Image.FromFile("Resources/player_left.png"),
+            TextureRight = Image.FromFile("Resources/player_right.png"),
         };
 
-        // Загрузка текстур
-        PlayerTexture = Image.FromFile("Resources/farmer.png");
+        Objects = new List<GameObject>
+    {
+        new StorageZone(new Point(700, 500)),
+        new TrashZone(new Point(100, 500))
+    };
+
         UsefulItemTexture = Image.FromFile("Resources/useful_item.png");
         TrashItemTexture = Image.FromFile("Resources/trash_item.png");
         StorageZoneTexture = Image.FromFile("Resources/storage_zone.png");

@@ -125,7 +125,10 @@ public class GameView : Form
         var g = e.Graphics;
 
         // Отрисовка игрока
-        g.DrawImage(model.PlayerTexture, model.Player.Bounds);
+        if (model.Player.CurrentTexture != null)
+        {
+            g.DrawImage(model.Player.CurrentTexture, model.Player.Bounds);
+        }
 
         // Отрисовка объектов
         foreach (var obj in model.Objects)
@@ -142,14 +145,9 @@ public class GameView : Form
             }
             else if (obj is Item item)
             {
-                if (item.Type == ItemType.Useful)
-                {
-                    texture = model.UsefulItemTexture;
-                }
-                else if (item.Type == ItemType.Trash)
-                {
-                    texture = model.TrashItemTexture;
-                }
+                texture = item.Type == ItemType.Useful
+                    ? model.UsefulItemTexture
+                    : model.TrashItemTexture;
             }
 
             if (texture != null)

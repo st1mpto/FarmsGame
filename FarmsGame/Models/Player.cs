@@ -4,26 +4,35 @@ public class Player
 {
     public Rectangle Bounds { get; private set; }
     public GameObject HeldItem { get; private set; }
-    private int baseSpeed = 10; // Изначальная скорость
-    private float speedModifier = 0.75f; // Модификатор скорости при переноске предмета
+    private int speed = 10;
 
-    public Player(Point initialPosition)
+    // Размер игрока
+    private Size playerSize;
+
+    // Текущая текстура
+    public Image CurrentTexture { get; private set; }
+
+    // Текстуры для каждого направления
+    public Image TextureUp { get; set; }
+    public Image TextureDown { get; set; }
+    public Image TextureLeft { get; set; }
+    public Image TextureRight { get; set; }
+
+    public Player(Point initialPosition, Size size)
     {
-        Bounds = new Rectangle(initialPosition, new Size(110, 110));
+        playerSize = size;
+        Bounds = new Rectangle(initialPosition, playerSize);
+        CurrentTexture = TextureDown; // Начальная текстура по умолчанию
     }
 
     public void Move(int dx, int dy)
     {
-        // Рассчитываем текущую скорость в зависимости от состояния игрока
-        int currentSpeed = HeldItem == null ? baseSpeed : (int)(baseSpeed * speedModifier);
+        Bounds = new Rectangle(Bounds.X + dx * speed, Bounds.Y + dy * speed, Bounds.Width, Bounds.Height);
 
-        // Обновляем положение игрока
-        Bounds = new Rectangle(
-            Bounds.X + dx * currentSpeed,
-            Bounds.Y + dy * currentSpeed,
-            Bounds.Width,
-            Bounds.Height
-        );
+        if (dx > 0) CurrentTexture = TextureRight;
+        else if (dx < 0) CurrentTexture = TextureLeft;
+        else if (dy > 0) CurrentTexture = TextureDown;
+        else if (dy < 0) CurrentTexture = TextureUp;
     }
 
     public void PickUpItem(GameObject item)
