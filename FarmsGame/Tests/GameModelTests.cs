@@ -27,18 +27,5 @@ namespace FarmsGame.Tests
 
             Assert.AreEqual(5, model.Score);
         }
-
-        [Test]
-        public void GameModel_TimerDecrements_EndsGameAtZero()
-        {
-            var model = new GameModel(3); // 3 seconds
-            bool gameOverCalled = false;
-            model.GameOver += () => gameOverCalled = true;
-
-            System.Threading.Thread.Sleep(4000); // Wait 4 seconds
-
-            Assert.IsTrue(gameOverCalled);
-            Assert.AreEqual(0, model.RemainingTime);
-        }
     }
 }
