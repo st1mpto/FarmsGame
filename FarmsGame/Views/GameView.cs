@@ -119,6 +119,17 @@ public class GameView : Form
             return;
         }
 
+        // Ввод имени игрока
+        var playerName = Prompt.ShowDialog("Введите ваше имя:", "Новый рекорд");
+        if (string.IsNullOrWhiteSpace(playerName))
+        {
+            playerName = "Player";
+        }
+
+        // Сохранение рекорда
+        RecordsManager.SaveRecord(playerName, model.Score);
+
+        // Показ сообщения и закрытие игры
         MessageBox.Show($"Игра окончена! Ваши очки: {model.Score}", "Конец игры", MessageBoxButtons.OK, MessageBoxIcon.Information);
         Application.Exit();
     }

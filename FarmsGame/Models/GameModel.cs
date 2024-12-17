@@ -178,7 +178,7 @@ public class GameModel
     public void SpawnItem()
     {
         // Добавляем шанс на спавн бустера скорости (например, 10%)
-        var randomType = random.Next(100) < 5 ? ItemType.SpeedBoost :
+        var randomType = random.Next(100) < 15 ? ItemType.SpeedBoost :
                          (random.Next(2) == 0 ? ItemType.Useful : ItemType.Trash);
 
         var position = new Point(random.Next(50, 750), random.Next(50, 550));

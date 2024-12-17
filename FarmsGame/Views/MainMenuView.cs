@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 public class MainMenuView : Form
 {
-    public event Action StartGameClicked;
-    public event Action ViewRecordsClicked;
-    public event Action ExitClicked;
-
     public MainMenuView()
     {
+        // Настройки формы
         this.Text = "Farm Game - Главное меню";
         this.Size = new Size(800, 600);
         this.StartPosition = FormStartPosition.CenterScreen;
         this.FormBorderStyle = FormBorderStyle.FixedDialog;
+        this.MaximizeBox = false;
+        this.MinimizeBox = false;
 
         // Заголовок
         var titleLabel = new Label
@@ -33,7 +33,11 @@ public class MainMenuView : Form
             Size = new Size(200, 50),
             Location = new Point(300, 200)
         };
-        startButton.Click += (s, e) => StartGameClicked?.Invoke();
+        startButton.Click += (s, e) =>
+        {
+            this.DialogResult = DialogResult.OK; // Запуск игры
+            this.Close();
+        };
         this.Controls.Add(startButton);
 
         // Кнопка "Рекорды"
@@ -44,7 +48,13 @@ public class MainMenuView : Form
             Size = new Size(200, 50),
             Location = new Point(300, 270)
         };
-        recordsButton.Click += (s, e) => ViewRecordsClicked?.Invoke();
+        recordsButton.Click += (s, e) =>
+        {
+            var records = RecordsManager.LoadRecords();
+            var recordsText = string.Join(Environment.NewLine, records.Select(r => $"{r.PlayerName}: {r.Score}"));
+            MessageBox.Show(recordsText == "" ? "Рекордов пока нет." : recordsText,
+                            "Рекорды", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        };
         this.Controls.Add(recordsButton);
 
         // Кнопка "Выйти"
@@ -55,7 +65,11 @@ public class MainMenuView : Form
             Size = new Size(200, 50),
             Location = new Point(300, 340)
         };
-        exitButton.Click += (s, e) => ExitClicked?.Invoke();
+        exitButton.Click += (s, e) =>
+        {
+            this.DialogResult = DialogResult.Abort; // Завершение программы
+            this.Close();
+        };
         this.Controls.Add(exitButton);
     }
 }

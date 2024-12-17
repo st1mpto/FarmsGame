@@ -87,6 +87,8 @@
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemType.cs" />
     <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\Prompt.cs" />
+    <Compile Include="Models\RecordsManager.cs" />
     <Compile Include="Models\StorageZone.cs" />
     <Compile Include="Models\TrashZone.cs" />
     <Compile Include="Models\Zone.cs" />

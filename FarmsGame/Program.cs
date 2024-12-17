@@ -9,32 +9,28 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        var mainMenu = new MainMenuView();
+        bool exitGame = false; // Флаг для выхода из игры
 
-        // Обработка событий главного меню
-        mainMenu.StartGameClicked += () =>
+        while (!exitGame)
         {
-            mainMenu.Hide();
-            var model = new GameModel(120); // Длительность игры 120 секунд
-            var view = new GameView(model);
-            var controller = new GameController(model, view);
+            // Создаём новый экземпляр главного меню
+            using (var mainMenu = new MainMenuView())
+            {
+                var result = mainMenu.ShowDialog();
 
-            // Показываем игровую форму
-            view.ShowDialog();
-            mainMenu.Show(); // После завершения игры возвращаем главное меню
-        };
+                if (result == DialogResult.OK) // Начать игру
+                {
+                    var model = new GameModel(10); // Длительность игры 120 секунд
+                    var view = new GameView(model);
+                    var controller = new GameController(model, view);
 
-        mainMenu.ViewRecordsClicked += () =>
-        {
-            MessageBox.Show("Рекорды пока не реализованы!", "Рекорды", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        };
-
-        mainMenu.ExitClicked += () =>
-        {
-            Application.Exit();
-        };
-
-        // Запуск главного меню
-        Application.Run(mainMenu);
+                    view.ShowDialog(); // Запускаем игру
+                }
+                else if (result == DialogResult.Abort) // Выйти из игры
+                {
+                    exitGame = true; // Завершаем цикл
+                }
+            }
+        }
     }
 }
