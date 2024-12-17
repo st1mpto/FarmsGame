@@ -141,6 +141,9 @@
     <Content Include="Resources\player_up.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\speed_boost.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\storage_zone.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

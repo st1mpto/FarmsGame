@@ -10,6 +10,7 @@ namespace FarmsGame.Models
     {
         Useful,
         Trash,
-        Zone
+        Zone,
+        SpeedBoost
     }
 }

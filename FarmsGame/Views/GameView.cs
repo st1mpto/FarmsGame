@@ -145,9 +145,18 @@ public class GameView : Form
             }
             else if (obj is Item item)
             {
-                texture = item.Type == ItemType.Useful
-                    ? model.UsefulItemTexture
-                    : model.TrashItemTexture;
+                switch (item.Type)
+                {
+                    case ItemType.Useful:
+                        texture = model.UsefulItemTexture;
+                        break;
+                    case ItemType.Trash:
+                        texture = model.TrashItemTexture;
+                        break;
+                    case ItemType.SpeedBoost:
+                        texture = model.SpeedBoostTexture;
+                        break;
+                }
             }
 
             if (texture != null)

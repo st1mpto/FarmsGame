@@ -17,6 +17,7 @@ public class GameModel
     public Image TrashItemTexture { get; private set; }
     public Image StorageZoneTexture { get; private set; }
     public Image TrashZoneTexture { get; private set; }
+    public Image SpeedBoostTexture { get; private set; }
 
     public event Action<int> TimeUpdated;
     public event Action<int> ScoreUpdated;
@@ -49,6 +50,7 @@ public class GameModel
         TrashItemTexture = Image.FromFile("Resources/trash_item.png");
         StorageZoneTexture = Image.FromFile("Resources/storage_zone.png");
         TrashZoneTexture = Image.FromFile("Resources/trash_zone.png");
+        SpeedBoostTexture = Image.FromFile("Resources/speed_boost.png");
 
         random = new Random();
         RemainingTime = gameDurationInSeconds;
@@ -76,12 +78,6 @@ public class GameModel
     public void MovePlayer(int dx, int dy)
     {
         Player.Move(dx, dy);
-
-        // Проверяем выпадение предмета раз в секунду
-        if (Player.HeldItem != null && ShouldDropItem())
-        {
-            DropHeldItem();
-        }
 
         foreach (var obj in Objects)
         {
@@ -130,21 +126,35 @@ public class GameModel
 
     public void PickUpItem()
     {
-        // Проверяем, держит ли игрок уже предмет
-        if (Player.HeldItem != null)
-        {
-            return; // Игрок уже держит предмет, не берём новый
-        }
-
         foreach (var obj in Objects)
         {
             if (obj is Item item && item.Bounds.IntersectsWith(Player.Bounds))
             {
-                Player.PickUpItem(item);
+                if (item.Type == ItemType.SpeedBoost)
+                {
+                    ActivateSpeedBoost();
+                }
+                else
+                {
+                    Player.PickUpItem(item);
+                }
+
                 Objects.Remove(item);
                 break;
             }
         }
+    }
+    private void ActivateSpeedBoost()
+    {
+        Player.SetSpeedBoost(15); // Устанавливаем ускорение
+        Timer speedBoostTimer = new Timer { Interval = 5000 }; // Буст длится 5 секунд
+        speedBoostTimer.Tick += (sender, e) =>
+        {
+            Player.ResetSpeed();
+            speedBoostTimer.Stop();
+            speedBoostTimer.Dispose();
+        };
+        speedBoostTimer.Start();
     }
 
     public void UpdateScore(int value)
@@ -167,10 +177,13 @@ public class GameModel
 
     public void SpawnItem()
     {
-        var itemType = random.Next(2) == 0 ? ItemType.Useful : ItemType.Trash;
+        // Добавляем шанс на спавн бустера скорости (например, 10%)
+        var randomType = random.Next(100) < 5 ? ItemType.SpeedBoost :
+                         (random.Next(2) == 0 ? ItemType.Useful : ItemType.Trash);
+
         var position = new Point(random.Next(50, 750), random.Next(50, 550));
 
-        var newItem = new Item(position, new Size(35, 35), itemType);
+        var newItem = new Item(position, new Size(35, 35), randomType);
         Objects.Add(newItem);
 
         Timer itemRemovalTimer = new Timer { Interval = 10000 }; // Удаление через 10 секунд

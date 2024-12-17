@@ -47,4 +47,15 @@ public class Player
     {
         HeldItem = null;
     }
+    private int defaultSpeed = 10;
+
+    public void SetSpeedBoost(int boostSpeed)
+    {
+        speed = boostSpeed;
+    }
+
+    public void ResetSpeed()
+    {
+        speed = defaultSpeed;
+    }
 }
