@@ -1,6 +1,7 @@
 ﻿using FarmsGame.Models;
 using System;
 using System.Drawing;
+using System.Media; // Подключаем для работы с музыкой
 using System.Windows.Forms;
 
 public class GameView : Form
@@ -9,6 +10,9 @@ public class GameView : Form
     private Label scoreLabel;
     private Label timerLabel;
     private Label notificationLabel;
+
+    // Поле для проигрывания музыки
+    private SoundPlayer backgroundMusic;
 
     public GameView(GameModel model)
     {
@@ -22,6 +26,36 @@ public class GameView : Form
         this.BackgroundImage = Image.FromFile("Resources/background.png");
         this.BackgroundImageLayout = ImageLayout.Stretch; // Растягиваем фон на весь экран
 
+        InitializeLabels();
+        InitializeMusic(); // Добавление музыки
+
+        model.ScoreUpdated += UpdateScoreLabel;
+        model.TimeUpdated += UpdateTimerLabel;
+        model.GameOver += ShowGameOver;
+        model.ItemDropped += ShowNotification;
+
+        var updateTimer = new Timer { Interval = 10 }; // Частота обновления экрана
+        updateTimer.Tick += (sender, e) => Refresh();
+        updateTimer.Start();
+    }
+
+    private void InitializeMusic()
+    {
+        try
+        {
+            // Указываем путь к музыкальному файлу
+            string musicPath = "Resources/background_music.wav";
+            backgroundMusic = new SoundPlayer(musicPath);
+            backgroundMusic.PlayLooping(); // Запуск музыки в цикле
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка воспроизведения музыки: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void InitializeLabels()
+    {
         scoreLabel = new Label
         {
             Text = "Очки: 0",
@@ -53,15 +87,6 @@ public class GameView : Form
             Visible = false
         };
         this.Controls.Add(notificationLabel);
-
-        model.ScoreUpdated += UpdateScoreLabel;
-        model.TimeUpdated += UpdateTimerLabel;
-        model.GameOver += ShowGameOver;
-        model.ItemDropped += ShowNotification;
-
-        var updateTimer = new Timer { Interval = 10 }; // Снижена частота обновления до 50 мс
-        updateTimer.Tick += (sender, e) => Refresh();
-        updateTimer.Start();
     }
 
     private void UpdateScoreLabel(int score)

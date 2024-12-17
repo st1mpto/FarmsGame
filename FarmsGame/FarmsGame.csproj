@@ -101,6 +101,9 @@
     <Compile Include="Views\GameView.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\MainMenuView.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -127,6 +130,9 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Resources\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\background_music.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\player_down.png">
